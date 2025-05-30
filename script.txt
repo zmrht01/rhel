@@ -1,0 +1,1414 @@
+
+--------------------------------------------------------------
+shell script
+--------------------------------------------------------------
+
+[root@script01 ~]# ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab
+
+you can literally have unlimeted command running from CLI
+this kind of commands is considered shell script
+
+--------------------------------------------------------------
+so you these command and put in a file, it bomes a bash script
+
+--------------------------------------------------------------
+Bash Script
+--------------------------------------------------------------
+#!                    #< --- shebang
+/bin/bash             #< --- location of bash command
+
+
+#!/bin/bash           #< --- you have to have this to become script
+
+--------------------------------------------------------------
+
+#!/bin/bash
+
+
+ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;
+
+--------------------------------------------------------------
+Method of executing the script file
+-----------------------------------
+
+[root@script01 ~]# ./script
+
+--------------------------------------------------------------
+Permission
+----------
+The script file must have execute permission
+
+--------------------------------------------------------------
+
+[root@script01 ~]# ls -l
+total 4
+-rw-r--r--. 1 root root 78 Dec 26 13:45 script
+[root@script01 ~]# ./script
+bash: ./script: Permission denied
+
+[root@script01 ~]# chmod 755 script      #< ---execute permission added
+
+[root@script01 ~]# ls -l
+total 4
+-rwxr-xr-x. 1 root root 78 Dec 26 13:45 script
+
+--------------------------------------------------------------
+execute the script
+------------------
+
+
+[root@script01 ~]# ./script  #< --- All the commands in the file will run
+
+--------------------------------------------------------------
+if you want to redirec the conent of the out to a file
+
+[root@script01 ~]# ./script >> output.txt
+
+output.txt will hold the output from the script
+
+--------------------------------------------------------------
+Script Identification
+---------------------
+The script itself does not need any extension, but generally its 
+good idea to have one
+
+Exmaples: .sh  .scr .scrp 
+
+
+[root@script01 ~]# ls -l
+total 12
+-rw-r--r--. 1 root root 2096 Dec 26 13:57 output.txt
+-rwxr-xr-x. 1 root root   78 Dec 26 13:45 script        #< ---
+-rwxr-xr-x. 1 root root   39 Dec 26 14:00 template.scr  #< ---
+
+--------------------------------------------------------------
+comment out
+-----------
+# hash is used for comments or disabling specific line in script
+
+#!/bin/bash
+
+
+#ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;  #< --- blind
+ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;
+#ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;  #< --- blind
+
+--------------------------------------------------------------
+
+
+#!/bin/bash
+
+echo "This is lsblk command"   #< --- This command will run
+
+lsblk                          #< --- This command will run
+
+echo "df -h is commented out"  #< --- This command will run
+
+#df -h                   #< --- This command will not run
+
+--------------------------------------------------------------
+basic.sh 
+--------
+
+#!/bin/bash
+
+#This is basic script with clean output
+
+echo "-----This is output of ls -l----"
+
+ls -l
+
+echo "-----This is output of pwd----"
+
+pwd
+
+echo "-----This is output of hostname----"
+
+hostname
+
+echo "-----This is output of lsblk----"
+
+lsblk
+
+echo "-----This is output of df -h----"
+
+df -h
+
+echo "-----This is output of cat /etc/fstab----"
+
+--------------------------------------------------------------
+commandlocation.scr
+-------------------
+
+#!/bin/bash
+
+#This is a commandlocation.scr
+
+
+df -h
+echo
+
+echo "this is ls -l `ls -l` "  #< ---use backtick ` if you have to use 
+                                     the command middle of the line
+
+
+--------------------------------------------------------------
+Arithematic Operators
+---------------------
+
++  addition
+-  subtraction
+*  multiplication  #< ---when using inside script use \*
+/  division
+--------------------------------------------------------------
+expr           #< --- expr is built-in command, stands for expression
+-----
+
+[root@script01 ~]# expr 2 + 2
+4
+[root@script01 ~]# expr 2 - 2
+0
+[root@script01 ~]# expr 2 / 2
+1
+[root@script01 ~]# expr 2 \* 2
+4
+
+--------------------------------------------------------------
+booblean operators    #< --- comparision ture or false
+------------------------------------------------------
+
+-eq  ==  equal to
+-ne  !=  not equal to
+-gt  >   greater than
+-lt  <   less than
+-le  <=  less than or equl to
+-ge  >=  greater than or equal to
+
+|| means "or"  - two pipes - this is key above "Enter"
+
+&& mesn  "and"
+
+$? - to check the exit code
+
+--------------------------------------------------------------
+read - this is built in command, provides chance to user for input
+--------------------------------------------------------------
+
+
+
+[root@script01 ~]# read
+zafar                   #< --- input is sitting memory
+
+There is no way to recall whats in memory
+
+[root@script01 ~]# read name1  #< ---you need to give a place holder [variable], name1 is variable
+zafar                          #< --- now its sitting memory
+
+[root@script01 ~]# echo $name1 #< --- echo command is used to read from memory
+zafar
+
+--------------------------------
+another example
+---------------
+
+
+[root@script01 ~]# read name1
+This is a linux course
+[root@script01 ~]# echo $name1
+This is a linux course
+
+
+--------------------------------
+another example
+---------------
+[root@script01 ~]# echo $name1
+This is a linux course
+[root@script01 ~]# read name2
+haroon
+[root@script01 ~]# read name3
+burhan
+[root@script01 ~]# read name4
+adil
+[root@script01 ~]# echo $name1 $name2 $name3 $name4 $name2  #< ---extracted from memory
+This is a linux course haroon burhan adil haroon
+
+--------------------------------------------------------------
+
+[root@script01 ~]# read num1
+45
+[root@script01 ~]# read num2
+55
+[root@script01 ~]# echo $num1 $num2
+45 55
+[root@script01 ~]# expr $num1 + $num2
+100
+[root@script01 ~]# expr $num1 - $num2
+-10
+[root@script01 ~]# expr $num1 \* $num2
+2475
+[root@script01 ~]# expr $num1 / $num2
+0
+
+--------------------------------------------------------------
+
+[root@script01 ~]# read num1
+45
+[root@script01 ~]# read num2
+55
+[root@script01 ~]# echo $num1 $num2
+45 55
+[root@script01 ~]# expr $num1 + $num2
+100
+[root@script01 ~]# expr $num1 - $num2
+-10
+[root@script01 ~]# expr $num1 \* $num2
+2475
+[root@script01 ~]# expr $num1 / $num2
+0
+
+--------------------------------------------------------------
+
+[root@script01 ~]# echo $name1 $num2 $name2 $num1 $name3 $name4 $name2
+This is a linux course 55 haroon 45 burhan adil haroon
+
+--------------------------------------------------------------
+ cal.sc
+-------
+
+#!/bin/bash
+
+#This is a simple calculator
+
+echo "Enter a first number"
+
+read num1
+
+echo "Enter a second number"
+
+read num2
+
+total=`expr $num1 + $num2`    #< --- total is place holder [variable - made up]
+
+echo "The sum of $num1 and $num2 is : $total" #< 
+
+--------------------------------------------------------------
+in reality a script is extracted and executed on CLI by the system
+--------------------------------------------------------------
+
+[root@script01 ~]# echo "Enter a first number"
+Enter a first number
+[root@script01 ~]# read num1
+45
+[root@script01 ~]# echo "Enter a second number"
+Enter a second number
+[root@script01 ~]# read num2
+90
+[root@script01 ~]# total=`expr $num1 + $num2`
+[root@script01 ~]# echo "The sum of $num1 and $num2 is : $total"
+The sum of 45 and 90 is : 135
+[root@script01 ~]# echo "The sum of $num1 and $num2"
+The sum of 45 and 90
+[root@script01 ~]# echo $total
+135
+
+--------------------------------------------------------------
+you get same result running at CLI
+--------------------------------------------------------------
+
+[root@script01 ~]# echo "Enter a first number";read num1;echo "Enter a second number";read num2;total=`expr $num1 + $num2`;echo "The sum of $num1 and $num2 is : $total"
+Enter a first number
+30
+Enter a second number
+40
+The sum of 30 and 40 is : 70
+
+--------------------------------------------------------------
+variable - place holder
+-----------------------
+
+What is variable
+
+Variable is a placeholder for a input, commands etc..,
+variable are defined by person writing a script
+--------------------------------------------------------------
+Two types of Variable - static and dynamic
+--------------------------------------------------------------
+
+Static variable
+---------------
+
+stvariable.st
+-------------
+
+[root@script01 ~]# chicago=illinois
+[root@script01 ~]# newyork=ny
+[root@script01 ~]# echo chicago
+chicago
+[root@script01 ~]# echo $chicago
+illinois
+[root@script01 ~]# echo $newyork
+ny
+
+
+
+#!/bin/bash
+
+#This is a static vairable exmaple
+
+chicago=illinois
+newyork=ny
+
+
+echo "$chicago is in midwest"
+echo
+echo "$newyork is in eastcoast"
+
+--------------------------------------------------------------
+[root@script01 ~]# ./stvariable.st
+illinois is in midwest
+
+ny is in eastcoast
+
+--------------------------------------------------------------
+
+Dynamic Variable
+----------------
+
+dyvariable.dy
+-------------
+
+#!/bin/bash
+
+#This is a dynamic [changes] variable
+
+echo "Enter a place in midwest"
+
+read midcity
+
+echo "Enter a place in east coast"
+
+read eastcity
+
+echo
+echo "$midcity is in midwest"
+echo
+echo "$eastcity is in east coast"
+
+------------------------------------------------------
+
+[root@script01 ~]# ./dyvariable.dy
+Enter a place in midwest
+st louis
+Enter a place in east coast
+new jersey
+
+st louis is in midwest
+
+new jersey is in east coast
+
+[root@script01 ~]# ./dyvariable.dy
+Enter a place in midwest
+springfield
+Enter a place in east coast
+boston
+
+springfield is in midwest
+
+boston is in east coast
+
+--------------------------------------------------------------
+Using Alias inside the script
+--------------------------------------------------------------
+
+aliaszafar.scr
+--------------
+
+
+#!/bin/bash
+
+#This is a exmample of using alias
+
+shopt -s expand_aliases #< ---type exactly the way it is, it will set and unset once the script is done
+
+alias haroon="ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;"
+
+haroon
+
+
+--------------------------------------------------------------
+redirector.scr
+--------------
+
+#!/bin/bash
+
+#This is ouput redirector example script
+
+
+echo "This is Line1 and will be displayed" #< displayed output
+
+echo
+echo
+
+echo "This line will be sent to file1.txt" >> file1.txt #< no output
+
+echo "This line output command will be sent to ouput.txt" #< displayed output
+
+echo "ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;" #< displayed output
+
+echo "`ls;pwd;echo;hostname;echo;lsblk;echo;df -h;echo;cat /etc/fstab;`" >> ouput1.txt #< no output
+
+echo "check the file ouput1.txt for your output"
+
+--------------------------------------------------------------
+
+redirectinput.scr
+-----------------
+
+#!/bin/bash
+
+#This script accepts mulitple inputs
+#provides input at CLI
+#exmaple of running script
+
+#./redirectinput.scr springfield, Illinois, US
+                     [   $1           $2     $3  ]     
+echo "These are instructions"
+echo
+echo "This script accepts three input at CLI"
+echo
+echo "City, State and Country"
+echo
+
+city=$1
+state=$2
+country=$3
+
+echo "Your city is  $city, Your state is $state, Your country is $country"
+echo
+echo
+
+--------------------------------------------------------------
+use case for the above script
+-----------------------------
+pinginput.scr
+-------------
+
+#!/bin/bash
+
+
+#This script accepts mulitple inputs for pinging servers
+#provides servers names at CLI
+#exmaple of running script
+
+#./pinginput.scr google.com zmprotech.com tesla.com
+
+
+server1=$1
+server2=$2
+server3=$3
+
+echo "This is a ping test"
+
+echo "This is test for $server1"
+ping -c 2 $server1
+
+echo "This is test for $server2"
+ping -c 2 $server2
+
+echo "This is test for $server3"
+ping -c 1 $server3
+
+--------------------------------------------------------------
+if/then statement
+------------
+if-statement.sh
+---------------
+
+#!/bin/bash
+
+#This is a if statement
+
+echo "Enter number 3"
+
+echo "--------------"
+
+echo
+
+read num1  #< ---Variable, script will stop for user input
+
+if    #< ---being if statement
+
+[ $num1 == 3 ] #< --- you can also use -eq
+
+then
+
+echo "you gave correct answer"
+
+fi    #<  ---closing if statement
+
+--------------------------------------------------------------
+if/then/else statement
+---------------------------
+
+if-then-else-statement.sh
+---------------------------
+
+
+#!/bin/bash
+
+#This is a if/else statement
+
+echo "Enter number 3"
+
+echo "--------------"
+
+echo
+
+read num1  #< ---Variable, script will stop for user input
+
+if    #< ---being if statement
+
+[ $num1 == 3 ] #< --- you can also use -eq
+
+then
+
+echo "you gave correct answer"
+
+else
+
+echo "echo you gave wrong answer"
+
+fi    #<  ---closing if statement
+
+--------------------------------------------------------------
+if/then/elif/else statement
+---------------------------
+if-then-elif-else-statement
+---------------------------
+
+#!/bin/bash
+
+#This is a if/then/elif/else statement
+
+echo "enter a number between 1 and 5"
+echo "------------------------------"
+echo
+
+read DATA
+
+if [ $DATA -eq 1 ]
+then
+echo "You entered 1"
+
+elif [ $DATA == 2 ]
+then
+echo "You entered 2"
+
+elif [ $DATA -eq 3 ]
+then
+echo "You entered 3"
+
+elif [ $DATA -eq 4 ]
+then
+echo "You entered 4"
+
+
+elif [ $DATA -eq 5 ]
+then
+echo "You entered 5"
+
+else
+
+echo "your entry is out of range"
+
+fi
+
+--------------------------------------------------------------
+String Evaluation
+-----------------
+
+#!/bin/bash
+
+#This is a sting evaluation
+
+echo "Enter string 'linux'"
+if
+read INPUT
+
+[ "$INPUT" == "linux" ]   #< --- Use == not -eq for string evaluation
+
+then
+echo "This is a linux course"
+
+else
+
+echo "String can't be evaluated"
+
+fi
+
+
+--------------------------------------------------------------
+use case scenerio
+-----------------
+if-then-elif-else-statement-example.sh
+--------------------------------------
+
+#!/bin/bash
+
+#This is a if/then/elif/else statement
+
+echo "This is my daily go to script commands"
+echo "------------------------------"
+echo "Enter one command: pwd, lsblk, ls -l, df -h, who, uptime"
+
+read DATA
+
+if [ "$DATA" == "pwd" ]
+then
+
+pwd
+
+elif [ "$DATA" == "lsblk" ]
+then
+
+lsblk
+
+elif [ "$DATA" == "ls -l" ]
+then
+
+ls -l
+
+
+elif [ "$DATA" == "df -h" ]
+then
+
+df -h
+
+elif [ "$DATA" == "who" ]
+then
+
+who
+
+elif [ "$DATA" == "uptime" ]
+then
+
+uptime
+
+else
+
+echo "use commadn from the list"
+
+fi
+
+--------------------------------------------------------------
+loop
+----
+for the loop to work 
+
+for statement
+do
+command
+done
+--------------------------------------------------------------
+for loop
+--------
+forloop1.sh
+-----------
+
+#!/bin/bash
+
+#This is a for loop statement
+
+
+for x in {1..100}
+do
+touch $x
+done
+
+--------------------------------------------------------------
+deleting the files
+------------------
+
+#!/bin/bash
+
+#This is a for loop statement
+
+
+for x in {1..100}
+do
+rm -rf $x
+done
+
+--------------------------------------------------------------
+forloop2.sh
+-----------
+
+#!/bin/bash
+
+#This is a for loop statement
+
+
+for x in {1..10000}
+do
+echo "This is line $x"
+done
+
+--------------------------------------------------------------
+forloop3.sh
+-----------
+
+#!/bin/bash
+
+#This is a for loop for reading files in this folder
+
+input=`ls`
+
+
+for x in "$input"
+do
+cat $x
+done
+
+--------------------------------------------------------------
+forloop4.sh
+-----------
+#!/bin/bash
+
+#This is a for loop statement
+
+
+for x in 1 2 3 4 5 6 7 8 9 10
+do
+echo "this is line $x"
+done
+--------------------------------------------------------------
+while loop
+----------
+whileloop1.sh
+-------------
+
+#!/bin/bash
+
+#This is a while loop
+#you have to be careful running while loop
+
+echo "Enter a number"
+
+read DATA
+
+count=1
+
+while [ $count -le $DATA ]
+
+do
+
+echo "This is a linux course: $count"
+
+count=`expr $count + 1`
+
+done
+
+
+--------------------------------------------------------------
+Running While loop at the CLI
+-----------------------------
+[root@script01 ~]# read x
+zafar
+[root@script01 ~]# echo $x
+zafar
+--------------------------------------------------------------
+[root@script01 ~]# read x;echo $x
+zafar
+zafar
+--------------------------------------------------------------
+
+[root@script01 ~]# while read x; do echo $x;done
+10
+10
+this ix linux
+this ix linux
+this cour is fun
+this cour is fun
+3
+3
+--------------------------------------------------------------
+[root@script01 ~]# while read x; do echo $x;done < boolean.sh
+--------------------------------------------------------------
+readfilex.sh
+------------
+
+#!/bin/bash
+
+#This is a blank template
+
+while read x
+
+do
+
+echo $x
+
+done < boolean.sh   #< ---This is a static input
+
+--------------------------------------------------------------
+readfiley.sh
+------------
+#!/bin/bash
+
+#This reading file
+#To run this script ./readfiley.sh filename
+while read x
+
+do
+
+echo $x
+
+done < $1
+
+--------------------------------------------------------------
+[root@script01 ~]# ./readfiley.sh redirector.scr
+--------------------------------------------------------------
+use case for this script
+-----------------------
+#!/bin/bash
+
+#This reading file
+#it read the files with hostname
+#To run this script ./readfiley.sh filename
+
+while read x
+
+do
+
+ping -c 2 $x
+
+done < $1
+
+[root@script01 ~]# ./pingservers.sh servlist
+
+--------------------------------------------------------------
+case statement
+--------------
+casestatement.scr
+-----------------
+
+#!/bin/bash
+
+#This is a case statement
+
+echo "----Select your favorite command----"
+echo
+echo "----Enter number only----"
+echo
+echo "Choice 1 is ls"
+echo "Choice 2 is df -h"
+echo "Choice 3 is lsblk"
+echo "Choice 4 is blkid"
+echo "Choice 5 is free -h"
+echo "Choice 6 is history"
+echo "Choice 7 is uptime"
+
+read CHOICE      #< CHOICE is Variable
+
+case $CHOICE in  #< case is built in command, start of statement
+
+1)
+ls;;
+
+2)
+df -h;;
+
+3)
+lsblk;;
+
+4)
+blkid;;
+
+5)
+free -h;;
+
+6)
+history;;
+
+7)
+uptime;;
+
+*)    #< ---This will be wildcard, unrecognized option
+
+echo "Your selection is invalid"
+
+esac  #< ---End of case statement, write backwards
+
+--------------------------------------------------------------
+Boolean Statement
+-----------------
+boolean.sh
+----------
+!/bin/bash
+
+#This is a bloolean evalulation
+#Evaluate if number between 1 and 5 is odd or even
+
+echo "Enter a number between 1 and 5"
+echo "------------------------------"
+echo
+
+read DATA   #< ---DATA is variable
+
+if [ $DATA == 1 ] || [ $DATA == 3 ] || [ $DATA == 5 ]
+then
+
+echo "You entered Odd number"
+else
+
+echo "You entered even number"
+
+fi
+
+--------------------------------------------------------------
+IFS = INTERNAL FIELD SEPERATOR AND DELIMITOR
+
+Delimitor examples ; : - , . 
+--------------------------------------------------------------
+ifs.sh
+------
+#!/bin/bash
+
+#This script is running IFS delimitor
+#this is parsing script
+
+echo "Entera file to parse"
+
+read FILE   #< FILE is a variable or place holder
+
+echo "Enter the delimitor to use example ; : - , ."
+
+read D      #< D is delimitor variable
+
+IFS=$D      #< IFS is a built in command and recognizes delimitor
+
+while read -r HOST IP CPU HDD RAM PROCESSOR
+
+do
+
+echo "Hostname: $HOST"
+echo "IP Address: $IP"
+echo "CPU: $CPU"
+echo "Hard Drive: $HDD"
+echo "RAM: $RAM"
+echo "Processor: $PROCESSOR"
+
+echo
+echo
+
+done < $FILE
+
+--------------------------------------------------------------
+zmpt01;192.168.56.250;64gb;500gb;ram8gb;processorxeon
+zmpt01;192.168.56.250;64gb;500gb;ram8gb;processorxeon
+--------------------------------------------------------------
+
+
+Hostname: zmpt01
+IP Address: 192.168.56.250
+CPU: 64gb
+Hard Drive: 500gb
+RAM: ram8gb
+Processor: processorxeon
+
+--------------------------------------------------------------
+ifs2.sh
+--------
+#!/bin/bash
+
+#This script is running IFS delimitor
+#this is parsing script
+
+echo "Entera file to parse"
+
+read FILE   #< FILE is a variable or place holder
+
+echo "Enter the delimitor to use example ; : - , ."
+
+read D      #< D is delimitor variable
+
+IFS=$D      #< IFS is a built in command and recognizes delimitor
+
+#while read -r HOST IP CPU HDD RAM PROCESSOR
+
+while read -r MONTH DATE TIME SERVERNAME NETWORK PROTOCOL NIC IP
+
+
+do
+
+echo "Month: $MONTH"
+echo "Date: $DATE"
+echo "Time: $TIME"
+echo "Server Name: $SERVERNAME"
+echo "Network: $NETWORK"
+echo "Protocol: $PROTOCOL"
+echo "NIC: $NIC"
+
+echo
+echo
+
+done < $FILE
+
+--------------------------------------------------------------
+
+Dec 27 04:08:59 script01 NetworkManager[761]: <info>  [1609060139.7444] dhcp4 (enp0s9):   address 10.0.2.12
+
+
+[root@script01 ~]# awk -F' ' '{print $1, $2, $3, $4, $5, $8, $9, $11}' varlogmessages > varlogmessages
+
+Result of awk command
+----
+Jan 2 15:17:34 script01 NetworkManager[761]: dhcp4 (enp0s9): 10.0.2.12
+
+--------------------------------------------------------------
+
+Dec 27 06:48:09 script01 NetworkManager[761]: dhcp4 (enp0s9): 10.0.2.12
+Dec 27 06:57:03 script01 NetworkManager[761]: dhcp4 (enp0s9): 10.0.2.12
+Dec 27 07:06:55 script01 NetworkManager[761]: dhcp4 (enp0s9): 10.0.2.12
+
+--------------------------------------------------------------
+NOTE:Use doulbe quote a double quote for space as delimitor " " 
+--------------------------------------------------------------
+
+[root@script01 ~]# ./ifs2.sh
+Entera file to parse
+varlogmessages1
+Enter the delimitor to use example ; : - , .
+" "
+--------------------------------------------------------------
+
+Month: Jan
+Date: 2
+Time: 15:17:34
+Server Name: script01
+Network: NetworkManager[761]:
+Protocol: dhcp4
+NIC: (enp0s9):
+IP Address: 10.0.2.12
+
+
+--------------------------------------------------------------
+Function
+--------
+it is small chunk of code which you can use multiple times in your script.
+it is useful if you have certain tasks which need to be performed several times in script
+--------------------------------------------------------------
+syntax
+------
+
+name_of_function()           #< ---Name followed by perenthesis()
+		{                    #< ---Open Curly Brackets
+		
+		
+		input your script code between curly brackets
+		
+		
+		}					#< ---Close curly brackets
+
+
+
+name_of_function    #< ---To actually run or execute function
+
+
+
+--------------------------------------------------------------
+function.sh
+-----------
+#!/bin/bash
+
+#This is a function
+
+chicago()
+        {
+who
+uptime
+df -h
+pwd
+hostname
+        }
+
+chicago
+
+--------------------------------------------------------------
+function2.sh
+-----------
+
+#!/bin/bash
+
+#This is a function
+
+comparison()
+        {
+
+echo "Enter a number between 1 and 5"
+echo "------------------------------"
+echo
+
+read DATA   #< ---DATA is variable
+
+if [ $DATA == 1 ] || [ $DATA == 3 ] || [ $DATA == 5 ]
+then
+
+echo "You entered Odd number"
+else
+
+echo "You entered even number"
+
+fi
+
+        }
+
+comparison      #< this time it will run three times
+comparison      #< this time it will run three times
+comparison      #< this time it will run three times
+--------------------------------------------------------------
+function3.sh
+------------
+
+#!/bin/bash
+
+#This is a multiple function
+
+comparison()
+        {
+
+echo "Enter a number between 1 and 5"
+echo "------------------------------"
+echo
+
+read DATA   #< ---DATA is variable
+
+if [ $DATA == 1 ] || [ $DATA == 3 ] || [ $DATA == 5 ]
+then
+
+echo "You entered Odd number"
+else
+
+echo "You entered even number"
+
+fi
+
+        }
+
+chicago()
+        {
+who
+uptime
+df -h
+pwd
+hostname
+        }
+
+chicago
+--------------------------------------------------------------
+Global and Local function
+-------------------------
+#This is a example of global and local function
+#This means functions are nested inside each other
+--------------------------------------------------------------
+
+function4.sh
+------------
+
+#!/bin/bash
+
+#This is a example of global and local function
+#This means functions are nested inside each other
+
+
+funGlobal()   #< Start of Global function
+        {
+
+        echo "This is a global function"
+
+        funLocal()  #< Start of Local function
+                {
+                echo "This is local function"
+                echo "The code goes here"
+
+                } #< End of local function
+
+        funLocal  #< executing the local function
+
+        }
+
+funGlobal
+--------------------------------------------------------------
+function5.sh
+------------
+
+#!/bin/bash
+
+#This is a example of global and local function
+#This means functions are nested inside each other
+
+
+funGlobal()   #< Start of Global function
+        {
+
+        echo "This is a global function"
+
+        funLocal()  #< Start of Local function
+                {
+                echo "This is local function"
+                echo "The code goes here"
+
+                } #< End of local function
+				
+				
+        comparison()  #< Start of Local function
+        {
+
+        echo "Enter a number between 1 and 5"
+        echo "------------------------------"
+        echo
+
+        read DATA   #< ---DATA is variable
+
+        if [ $DATA == 1 ] || [ $DATA == 3 ] || [ $DATA == 5 ]
+        then
+
+        echo "You entered Odd number"
+        else
+
+        echo "You entered even number"
+
+        fi
+        }
+
+        funLocal    #< Local function execution
+		comparison  #< Local function execution
+
+        }
+
+
+chicago()
+        {
+who
+uptime
+df -h
+pwd
+hostname
+        }
+
+
+funGlobal
+
+chicago
+
+--------------------------------------------------------------
+Function with input parameters
+------------------------------
+function6.sh
+------------
+#!/bin/bash
+
+#This is a function with input parameters
+
+
+ageCalDay()
+        {
+        echo "Hello $USERNAME, your age $USERAGE years old"
+        echo "Your age in days is `expr $USERAGE \* 365` "
+
+        }
+
+echo "Enter your name: "
+read USERNAME
+echo
+echo "Enter your Age"
+read USERAGE
+
+ageCalDay
+
+--------------------------------------------------------------
+LVM Script
+----------
+
+#!/bin/bash
+
+#This is a lvm script
+
+echo "pv create is running"
+
+pvcreate /dev/sdc /dev/sdd /dev/sde
+
+echo "Script is creating VG ZMPT1"
+
+vgcreate zmpt1 /dev/sdc /dev/sdd /dev/sde
+
+echo "Creating Accounting LV"
+
+lvcreate -n Accounting -L 4G zmpt1
+
+echo "Creating Finance LV"
+
+lvcreate -n Finance -L 6G zmpt1
+
+echo "Creating HR LV"
+
+lvcreate -n HR -L 2G zmpt1
+
+echo "Creating Recruiting LV"
+
+lvcreate -n Recruiting -L 4G zmpt1
+
+echo "Creating file system"
+
+mkfs.xfs /dev/zmpt1/Accounting
+
+mkfs.xfs /dev/zmpt1/Finance
+
+mkfs.xfs /dev/zmpt1/HR
+
+mkfs.xfs /dev/zmpt1/Recruiting
+
+echo "Performing partprobe"
+
+partprobe
+
+echo "Script is creating associated directories"
+
+mkdir /accounting
+mkdir /finance
+mkdir /hr
+mkdir /recruiting
+
+echo "Making fstab entries"
+
+echo "/dev/mapper/zmpt1-Accounting  /accounting       xfs     defaults        0 0" >> /etc/fstab
+
+echo "/dev/mapper/zmpt1-Finance     /finance       xfs     defaults        0 0" >> /etc/fstab
+
+echo "/dev/mapper/zmpt1-HR          /hr       xfs     defaults        0 0" >> /etc/fstab
+
+echo "/dev/mapper/zmpt1-Recruiting  /recruiting       xfs     defaults        0 0" >> /etc/fstab
+
+echo "mounting from fstab"
+
+mount -a
+
+echo "Check the mount now"
+
+df -h
+
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
